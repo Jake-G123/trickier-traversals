@@ -69,18 +69,29 @@ public class Traversals {
    * @return a list of node values in a top-to-bottom order, or an empty list if the tree is null
    */
   public static <T> List<T> collectLevelOrderValues(TreeNode<T> node) {
-    List<T> temp = new LinkedList<>();
-    if (node == null) {
-      return temp;
+    List<List<T>> temp = new ArrayList<>();
+    List<T> temp2 = new ArrayList<>();
+
+    collectLevelOrderValues(node, 0, temp);
+
+    for (int i = 0; i<temp.size(); i++) {
+      temp2.addAll(temp.get(i));
     }
-
-    temp.addAll(collectLevelOrderValues(node.left));
-    temp.add(node.value);
-    temp.addAll(collectLevelOrderValues(node.right));
-
-    return temp;
+    
+    return temp2;
   }
+  private static <T> List<List<T>> collectLevelOrderValues(TreeNode<T> node, int level, List<List<T>> levelValues) {
+    if (node == null) return levelValues;
 
+    if (levelValues.size() <= level) levelValues.add(new ArrayList<>());
+
+    levelValues.get(level).add(node.value);
+
+    collectLevelOrderValues(node.left, level+1, levelValues);
+    collectLevelOrderValues(node.right, level+1, levelValues);
+
+    return levelValues;
+  }
   /**
    * Counts the distinct values in the given tree.
    * If node is null, returns 0.
@@ -90,7 +101,7 @@ public class Traversals {
    */
   public static int countDistinctValues(TreeNode<Integer> node) {
     if (node == null) return 0;
-    Set<Integer> values = new HashSet();
+    Set<Integer> values = new HashSet<>();
     values = countDistinctValues(node, values);
     return values.size();
   }
