@@ -188,6 +188,32 @@ public class Traversals {
    * @return a list of lists, where each inner list represents a root-to-leaf path in pre-order
    */
   public static <T> List<List<T>> findAllRootToLeafPaths(TreeNode<T> node) {
-    return null;
+    List<List<T>> x = new ArrayList<List<T>>();
+    if (node == null) return x;
+    x.addAll(findAllRootToLeafPathsHelper(node));
+    for (int i = 0; i<x.size(); i++) {
+      x.set(i, x.get(i).reversed());
+    }
+    return x;
+  }
+
+  private static <T> List<List<T>> findAllRootToLeafPathsHelper(TreeNode<T> node) {
+    List<List<T>> x = new ArrayList<List<T>>();
+    if (node.left == null && node.right == null) {
+      List<T> y = new ArrayList<>();
+      y.add(node.value);
+      x.add(y);
+      return x;
+    }
+    if (node.left != null) {
+        x.addAll(findAllRootToLeafPathsHelper(node.left));
+    }
+    if (node.right != null) {
+      x.addAll(findAllRootToLeafPathsHelper(node.right));
+    }
+    for (int i = 0; i<x.size(); i++) {
+      x.get(i).add(node.value);
+    }
+    return x;
   }
 }
